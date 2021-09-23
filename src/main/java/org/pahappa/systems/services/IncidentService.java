@@ -21,7 +21,7 @@ public interface IncidentService {
 	 * @throws Exception
 	 * @return saved {@link Incident}
 	 */
-	Incident saveIncident(Incident incident) throws Exception;
+	void saveIncident(Incident incident) throws Exception;
 
 	/**
 	 * Updates an {@link Incident}. An incident must have an id, title, type, status and comment.
@@ -77,7 +77,7 @@ public interface IncidentService {
 	 * @param id
 	 * @return updated {@link Incident}
 	 */
-	Incident getIncidentOfId(int id);
+	List<Incident> getIncidentOfId(int id);
 
 	/**
 	 * Deletes an {@link Incident}

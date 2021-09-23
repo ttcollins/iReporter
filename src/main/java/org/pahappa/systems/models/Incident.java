@@ -3,6 +3,7 @@ package org.pahappa.systems.models;
 
 import org.pahappa.systems.enums.*;
 
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -14,6 +15,8 @@ import java.util.Date;
  * status[Draft, Under investigation, Resolved, Rejected], createdOn and comment
  *
  */
+@Entity
+@Table(name = "incidents")
 public class Incident {
     private int id;
     private String title;
@@ -23,6 +26,7 @@ public class Incident {
     private String comment;
 	private int counter;
 
+	@Column(name = "counter")
 	public int getCounter() {
 		return counter;
 	}
@@ -31,36 +35,49 @@ public class Incident {
 		this.counter = counter;
 	}
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	@Column(name = "title")
 	public String getTitle() {
 		return title;
 	}
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
+	@Column(name = "type")
 	public Type getType() {
 		return type;
 	}
 	public void setType(Type type) {
 		this.type = type;
 	}
+
+	@Column(name = "status")
 	public Status getStatus() {
 		return status;
 	}
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+
+	@Column(name = "created_on")
 	public Date getCreatedOn() {
 		return createdOn;
 	}
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
+
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
