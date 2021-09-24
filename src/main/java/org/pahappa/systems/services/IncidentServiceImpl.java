@@ -1,23 +1,33 @@
 package org.pahappa.systems.services;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.pahappa.systems.HibernateUtil;
 import org.pahappa.systems.enums.Status;
 import org.pahappa.systems.enums.Type;
 import org.pahappa.systems.exceptions.SavingFailedException;
 import org.pahappa.systems.exceptions.ValidationFailedException;
 import org.pahappa.systems.models.Incident;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
-
+@Service
+@Transactional
 public class IncidentServiceImpl implements IncidentService {
+	private static Transaction transObj;
+	private static Session sessionObj = HibernateUtil.getSessionFactory().openSession();
 
-	private  static ArrayList<Incident> incidents = new ArrayList<Incident>();
 	private static int incidentIds=0;
 
 	@Override
-	public Incident saveIncident(Incident incident) throws Exception {
+	public void saveIncident(Incident incident) throws Exception {
 
 		if (incident.getTitle()==null){
 			throw new ValidationFailedException("Please enter title");
@@ -31,67 +41,114 @@ public class IncidentServiceImpl implements IncidentService {
 		if (incident.getComment().isEmpty()){
 			throw new ValidationFailedException("please enter comment.");
 		}
-		incident.setId(++incidentIds);
-		incident.setStatus(Status.DRAFT);
-		incident.setCreatedOn( new Date());
-		incidents.add(incident);
+		try {
 
-		return incident;
+			incident.setId(++incidentIds);
+			incident.setStatus(Status.DRAFT);
+			incident.setCreatedOn( new Date());
 
+			transObj = sessionObj.beginTransaction();
+			sessionObj.save(incident);
+			System.out.println("Record saved...");
+
+		} catch (HibernateException exceptionObj) {
+			exceptionObj.printStackTrace();
+		} finally {
+			transObj.commit();
+		}
 	}
 
 	@Override
 	public Incident updateIncident(Incident incident) throws Exception {
-		for(Incident item: incidents){
-			if(item.getId() == incident.getId()){
-				item.setTitle(incident.getTitle());
-				item.setType(incident.getType());
-				item.setComment(incident.getComment());
-				return item;
-			}
+		Scanner sc = new Scanner(System.in);
+
+		System.out.println("Enter the new Title: ");
+		incident.setTitle(sc.nextLine());
+
+		System.out.println("Choose 1 for Corruption Incident or 2 for Intervention incident");
+		int type3 = sc.nextInt();
+		sc.nextLine();
+
+		if (type3 == 1) {
+			incident.setType(Type.RED_FLAG);
+		} else if (type3 == 2) {
+			incident.setType(Type.INTERVENTION);
 		}
-		throw new SavingFailedException("Record not found");
+
+		System.out.println("Enter the new Comment");
+		incident.setComment(sc.nextLine());
+
+		return incident;
+//		throw new SavingFailedException("Record not found");
 	}
 
 	@Override
 	public List<Incident> getAllIncidents() {
-		return incidents;
+		List<Incident> incidentsList = new ArrayList();
+		try{
+			transObj = sessionObj.beginTransaction();
+
+			Query queryObj = sessionObj.createQuery("from Incident");
+
+			incidentsList = queryObj.list();
+
+		} catch ( HibernateException exceptionObj ) {
+			exceptionObj.printStackTrace();
+		} finally {
+			transObj.commit();
+		}
+		return incidentsList;
 	}
 
 	@Override
 	public List<Incident> getRedflagIncidents() {
-		//[redflagIncidents] will contain all incidents in [incidents] where type is REDFLAG
-		List<Incident> redflagIncidents = new ArrayList<Incident>();
-		for (Incident incident:incidents) {
-			if( incident.getType() == Type.RED_FLAG ){
-				redflagIncidents.add(incident);
-			}
+		List<Incident> redflagIncidents = new ArrayList<>();
+		try {
+			transObj = sessionObj.beginTransaction();
+
+			Query queryObj = sessionObj.createQuery("from Incident where type = 0");
+
+			redflagIncidents = queryObj.list();
+
+
+		} catch (HibernateException exceptionObj) {
+			exceptionObj.printStackTrace();
+		} finally {
+			transObj.commit();
 		}
-		//The List will be empty if no incidents were marked as REDFLAG
 		return redflagIncidents;
 	}
 
 	@Override
-	//creating a list to store intervention incidents
 	public List<Incident> getInterventionIncidents() {
-		List<Incident> interventionIncidents =new ArrayList<Incident>();
-		//looping through the incidents list to get intervention incidents
-		for (Incident incident:incidents) {
-			if (incident.getType()== Type.INTERVENTION) {
-				interventionIncidents.add(incident);
-			}
+		List<Incident> interventionIncidents = new ArrayList<>();
+		try {
+			transObj = sessionObj.beginTransaction();
+
+			Query queryObj = sessionObj.createQuery("from Incident where type = 1");
+
+			interventionIncidents = queryObj.list();
+
+		} catch (HibernateException exceptionObj) {
+			exceptionObj.printStackTrace();
+		} finally {
+			transObj.commit();
 		}
-		// TODO Auto-generated method stub
 		return interventionIncidents;
 	}
 
 	@Override
 	public int countIncidents() {
+		List<Incident> incidents = new ArrayList<>();
+		incidents = getAllIncidents();
 		return incidents.size();
 	}
 
 	@Override
 	public boolean incidentExists(Incident incident) {
+		List<Incident> incidents = new ArrayList<>();
+		incidents = getAllIncidents();
+
 		String titleOfpassedIncident = incident.getTitle();
 		for(Incident item:incidents){
 			String titleOfIncident = item.getTitle();
@@ -105,20 +162,44 @@ public class IncidentServiceImpl implements IncidentService {
 	}
 
 	@Override
-	public Incident getIncidentOfId(int id) {
-		for(Incident incident:incidents){
-			if(incident.getId() == id){
-				return incident;
-			}
+	public List<Incident> getIncidentOfId(int id) {
+		List<Incident> incidents = new ArrayList<>();
+		try {
+			transObj = sessionObj.beginTransaction();
+
+			Query queryObj = sessionObj.createQuery("from Incident where id = id");
+
+			incidents = queryObj.list();
+
+		} catch (HibernateException exceptionObj) {
+			exceptionObj.printStackTrace();
+		} finally {
+			transObj.commit();
 		}
-		return null;
+
+		if(incidents == null){
+			return null;
+		}else if(incidents.isEmpty()){
+			return null;
+		}else{
+			return incidents;
+		}
 	}
 
 	@Override
 	public void deleteIncident(Incident incident) {
 		if(incident != null){
 			if(incidentExists(incident)){
-				incidents.remove(incident);
+				try {
+					transObj = sessionObj.beginTransaction();
+					sessionObj.delete(incident);
+					System.out.println("Incident Record With Title: " + incident.getTitle() + " Is Successfully Deleted From Database");
+
+				} catch (HibernateException exceptionObj) {
+					exceptionObj.printStackTrace();
+				} finally {
+					transObj.commit();
+				}
 			}else{
 				System.out.println("There is no record of this incident");
 			}
@@ -126,7 +207,5 @@ public class IncidentServiceImpl implements IncidentService {
 			System.out.println("Please an enter an incident to delete");
 		}
 	}
-
-
 
 }
