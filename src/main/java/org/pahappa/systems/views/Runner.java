@@ -38,29 +38,6 @@ public class Runner {
     }
 
     /**
-     * This method helps to call the update method to update an incident.
-     * @param incident
-     * @return
-     */
-    public static Incident check(Incident incident) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the new Title: ");
-        incident.setTitle(sc.nextLine());
-        System.out.println("Choose 1 for Corruption Incident or 2 for Intervention incident");
-        int type3 = sc.nextInt();
-        sc.nextLine();
-        if (type3 == 1) {
-            incident.setType(Type.RED_FLAG);
-        } else if (type3 == 2) {
-            incident.setType(Type.INTERVENTION);
-        }
-        System.out.println("Enter the new Comment");
-        incident.setComment(sc.nextLine());
-        return incident;
-
-    }
-
-    /**
      * Prints the details of an incident and displays the back option
      * @param incident
      */
@@ -98,7 +75,7 @@ public class Runner {
 
     public static void main(String[] args) throws Exception {
         //Setting up dummy incidents
-        incidentFactory();
+        //incidentFactory();
 
         IncidentServiceImpl serviceHelper =new IncidentServiceImpl();
 
@@ -200,7 +177,6 @@ public class Runner {
                     sc.nextLine();
 
                     System.out.println("Please enter the title of your incident \n");
-                    sc.nextLine();
                     String title = sc.nextLine();
                     System.out.println("Enter your comment \n");
                     String comment = sc.nextLine();
@@ -215,9 +191,8 @@ public class Runner {
                     incident1.setTitle(title);
                     incident1.setComment(comment);
 
-                    Incident savedIncident = serviceHelper.saveIncident(incident1);
+                    serviceHelper.saveIncident(incident1);
                     System.out.println("Your report has been saved" + "\n");
-                    System.out.println(savedIncident);
 
                     break;
 
@@ -226,14 +201,14 @@ public class Runner {
                     System.out.println("===== Please Choose the number of the incident to edit =====");
                     printIncidents(serviceHelper.getAllIncidents());
                     int chosen = sc.nextInt();
-                    System.out.println(check(serviceHelper.getAllIncidents().get(chosen-1)));
+                    serviceHelper.updateIncident(serviceHelper.getAllIncidents().get(chosen-1));
 
                     break;
                 case 4:
                     while (true) {
                         printIncidents(serviceHelper.getAllIncidents(), "All Incidents");
                         System.out.println("Please type the number of the incident you would like to delete");
-                        System.out.println("To exit, type 00");
+                        System.out.println("To exit, type 0");
                         Scanner y = new Scanner(System.in);
                         option = y.nextInt();
 
@@ -264,5 +239,4 @@ public class Runner {
 
 
     }
-
 }

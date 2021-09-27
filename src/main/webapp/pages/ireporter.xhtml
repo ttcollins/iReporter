@@ -3,12 +3,43 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-<h:head>
-    <script name="jquery/jquery.js" library="primefaces"></script>
-    <title>iReporter</title>
-</h:head>
-<h:form>
-    <h1>Hi there!!!</h1>
-</h:form>
+    <h:head>
+        <script name="jquery/jquery.js" library="primefaces"></script>
+        <title>iReporter</title>
+    </h:head>
+<!--<div style="margin-left:auto; margin-right:auto;">-->
+    <body>
+        <div class="card">
+            <h1>WELCOME TO IREPORTER SYSTEM</h1>
+            <h3>DESCRIPTION: Corruption is a huge bane to Africa’s development. African countries must develop</h3>
+            <h3>novel and localised solutions that will curb this menace, hence the birth of iReporter. iReporter</h3>
+            <h3>enables any/every citizen to bring any form of corruption to the notice of appropriate authorities</h3>
+            <h3>and the general public. Users can also report on things that needs government intervention</h3>
+            <h2><b>WHAT WOULD YOU LIKE TO DO?</b></h2>
+            <div class="card">
+                <p:link outcome="allIncidents.xhtml" value="View all Incidents">
+                    <f:param name="allIncidents" value="1"/>
+                </p:link><br/>
+                <p:link outcome="redflagIncidents.xhtml" value="View Redflag Incidents">
+                    <f:param name="redflagIncidents" value="1"/>
+                </p:link><br/>
+                <p:link outcome="interventionIncidents.xhtml" value="View Intervention Incidents">
+                    <f:param name="interventionIncidents" value="1"/>
+                </p:link><br/>
+                <p:link outcome="saveIncident.xhtml" value="Create an Incident">
+                    <f:param name="saveIncident" value="1"/>
+                </p:link><br/>
+                <p:link outcome="updateIncident.xhtml" value="Update an Incident">
+                    <f:param name="updateIncident" value="1"/>
+                </p:link><br/>
+                <p:link outcome="deleteIncident.xhtml" value="Delete an Incident">
+                    <f:param name="deleteIncident" value="1"/>
+                </p:link><br/>
+                <p:link outcome="countIncidents.xhtml" value="Get the total number of Incidents">
+                    <f:param name="countIncidents" value="1"/>
+                </p:link><br/>
+            </div>
+        </div>
+    </body>
 
 </html>

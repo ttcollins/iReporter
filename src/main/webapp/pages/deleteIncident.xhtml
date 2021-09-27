@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+  <script name="jquery/jquery.js" library="primefaces"></script>
+  <title>Delete an Incident</title>
+</h:head>
+<!--<div style="margin-left:auto; margin-right:auto;">-->
+<body>
+<div class="card">
+  <p:link outcome="ireporter.xhtml" value="Back"/>
+  <h1>Delete an Incident</h1>
+  <h:form>
+    <div class="ui-fluid p-formgrid p-grid">
+      <div class="p-field p-col-12 p-md-6">
+        <label for="Id">Enter Code:</label>
+        <p:inputText id="Id" type="text" value="#{ireporterView.code}" />
+        <p:commandButton value="Delete" action="#{ireporterView.delete()}"></p:commandButton>
+      </div>
+    </div>
+    <div class="card">
+      <p:dataTable var="incident" value="#{ireporterView.incidents}">
+        <p:column headerText="Code">
+          <h:outputText value="#{incident.id}" />
+        </p:column>
+
+        <p:column headerText="Title">
+          <h:outputText value="#{incident.title}" />
+        </p:column>
+
+        <p:column headerText="Type">
+          <h:outputText value="#{incident.type}" />
+        </p:column>
+
+        <p:column headerText="Comment">
+          <h:outputText value="#{incident.comment}" />
+        </p:column>
+
+        <p:column headerText="Status">
+          <h:outputText value="#{incident.status}" />
+        </p:column>
+
+        <p:column headerText="Created On">
+          <h:outputText value="#{incident.createdOn}" />
+        </p:column>
+        <p:link outcome="ireporter.xhtml" value="Edit"/>
+      </p:dataTable>
+    </div>
+  </h:form>
+
+</div>
+</body>
+</html>

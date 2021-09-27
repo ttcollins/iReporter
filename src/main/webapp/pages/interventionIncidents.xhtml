@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+  <script name="jquery/jquery.js" library="primefaces"></script>
+  <title>iReporter Intervention Incidents</title>
+</h:head>
+<!--<div style="margin-left:auto; margin-right:auto;">-->
+<body>
+<div class="card">
+  <p:link outcome="ireporter.xhtml" value="Back"/>
+  <h1>Intervention Incidents</h1>
+  <h:form>
+    <div class="card">
+      <p:dataTable var="interventionIncident" value="#{ireporterView.interventionIncidents}">
+        <p:column headerText="Code">
+          <h:outputText value="#{interventionIncident.id}" />
+        </p:column>
+
+        <p:column headerText="Title">
+          <h:outputText value="#{interventionIncident.title}" />
+        </p:column>
+
+        <p:column headerText="Type">
+          <h:outputText value="#{interventionIncident.type}" />
+        </p:column>
+
+        <p:column headerText="Comment">
+          <h:outputText value="#{interventionIncident.comment}" />
+        </p:column>
+
+        <p:column headerText="Status">
+          <h:outputText value="#{interventionIncident.status}" />
+        </p:column>
+
+        <p:column headerText="Created On">
+          <h:outputText value="#{interventionIncident.createdOn}" />
+        </p:column>
+      </p:dataTable>
+    </div>
+  </h:form>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+  <script name="jquery/jquery.js" library="primefaces"></script>
+  <title>Total Incidents</title>
+</h:head>
+<!--<div style="margin-left:auto; margin-right:auto;">-->
+<body>
+<div class="card">
+  <p:link outcome="ireporter.xhtml" value="Back"/>
+  <h1>Total Number of Incidents</h1>
+  <h3><b>#{ireporterView.incidentNumber()}</b></h3>
+</div>
+</body>
+</html>

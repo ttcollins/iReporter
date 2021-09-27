@@ -6,8 +6,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.pahappa.systems.HibernateUtil;
 import org.pahappa.systems.enums.Status;
-import org.pahappa.systems.enums.Type;
-import org.pahappa.systems.exceptions.SavingFailedException;
 import org.pahappa.systems.exceptions.ValidationFailedException;
 import org.pahappa.systems.models.Incident;
 import org.springframework.stereotype.Service;
@@ -16,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 @Service
 @Transactional
@@ -59,26 +56,17 @@ public class IncidentServiceImpl implements IncidentService {
 	}
 
 	@Override
-	public Incident updateIncident(Incident incident) throws Exception {
-		Scanner sc = new Scanner(System.in);
-
-		System.out.println("Enter the new Title: ");
-		incident.setTitle(sc.nextLine());
-
-		System.out.println("Choose 1 for Corruption Incident or 2 for Intervention incident");
-		int type3 = sc.nextInt();
-		sc.nextLine();
-
-		if (type3 == 1) {
-			incident.setType(Type.RED_FLAG);
-		} else if (type3 == 2) {
-			incident.setType(Type.INTERVENTION);
+	public void updateIncident(Incident incident) throws Exception {
+		try {
+			transObj = sessionObj.beginTransaction();
+			Incident editIn = (Incident) sessionObj.load(Incident.class, incident.getId());
+			sessionObj.update(editIn);
+			System.out.println("Record Updated");
+		} catch ( HibernateException exceptionObj ) {
+			exceptionObj.printStackTrace();
+		} finally {
+			transObj.commit();
 		}
-
-		System.out.println("Enter the new Comment");
-		incident.setComment(sc.nextLine());
-
-		return incident;
 //		throw new SavingFailedException("Record not found");
 	}
 

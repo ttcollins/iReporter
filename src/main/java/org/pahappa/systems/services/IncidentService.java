@@ -30,11 +30,10 @@ public interface IncidentService {
 	 * 
 	 * In case a Incident fails to save after all validation criteria is met. Throw {@link SavingFailedException}
 	 * 
-	 * @param activity
+	 * @param incident
 	 * @throws Exception
-	 * @return updated {@link Incident}
-	 */
-	Incident updateIncident(Incident incident) throws Exception;
+     */
+	void updateIncident(Incident incident) throws Exception;
 	
 	/**
 	 * Gets all available {@link Incident}

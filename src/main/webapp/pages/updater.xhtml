@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <script name="jquery/jquery.js" library="primefaces"></script>
+    <title>Update an Incident</title>
+</h:head>
+<!--<div style="margin-left:auto; margin-right:auto;">-->
+<body>
+<div class="card">
+    <p:link outcome="ireporter.xhtml" value="Back"/>
+    <h1>Update an Incident</h1>
+    <h:form>
+        <div class="ui-fluid p-formgrid p-grid">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="title">Title</label>
+                <p:inputText id="title" type="text" value="#{ireporterView.editIncident.title}" />
+            </div>
+
+            <div class="p-field p-col-12">
+                <h:outputLabel for="comment">Comment</h:outputLabel>
+                <h:inputTextarea id="comment" row = "30" col = "10" value = "#{ireporterView.editIncident.comment}"/>
+            </div>
+
+            <h:selectOneMenu value="#{ireporterView.editIncident.type}">
+                <f:selectItem itemLabel="Select type" itemValue="null"/>
+                <f:selectItems var="type" itemLabel="#{type.label}"  value="#{ireporterView.types}"/>
+            </h:selectOneMenu>
+            <p:commandButton value="Update" action="#{ireporterView.update(ireporterView.editIncident)}"></p:commandButton>
+
+        </div>
+    </h:form>
+
+</div>
+</body>
+</html>

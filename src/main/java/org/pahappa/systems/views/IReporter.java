@@ -1,242 +1,157 @@
 package org.pahappa.systems.views;
 
-import org.pahappa.systems.enums.Type;
 import org.pahappa.systems.models.Incident;
+import org.pahappa.systems.enums.Type;
 import org.pahappa.systems.services.IncidentServiceImpl;
 
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
+
+@ManagedBean( name = "ireporterView" )
+@SessionScoped
 public class IReporter {
 
-	/**
-	 * This function helps print incidents with a numbered format.
-	 * It also sets the counter attribute in the Incident class.
-	 * @param incidents
-	 */
-	public static void printIncidents(List<Incident> incidents){
-		System.out.println("======== All Incidents =======");
-		int counter = 0;
-		for(Incident item:incidents){
-			item.setCounter(++counter);
-			System.out.println(item.getCounter()+". "+item);
-		}
-	}
+    private IncidentServiceImpl serviceHelper =new IncidentServiceImpl();
+    private Incident incident = new Incident();
+    private int code;
+    private Incident editIncident = new Incident();
+    private List<Incident> redflagIncidents;
+    private List<Incident> interventionIncidents;
+    private List<Incident> incidents;
+    private List<Type> types;
 
-	/**
-	 * Function takes in a list of {@link Incident}s with a Title, and prints them as options
-	 * @param incidents
-	 * @param type
-	 */
-	public static void printIncidents(List<Incident> incidents, String type){
-		System.out.println("======== "+ type +" =======");
-		int counter = 0;
-		for(Incident item:incidents){
-			item.setCounter(++counter);
-			System.out.println(item.getCounter()+". "+item);
-		}
-	}
-
-	/**
-	 * Prints the details of an incident and displays the back option
-	 * @param incident
-	 */
-	public static void printIncident(Incident incident){
-		System.out.println("Incident Title: " + incident.getTitle() );
-		System.out.println("Incident Type: " + incident.getType() );
-		System.out.println("Incident Comment: " + incident.getComment() );
-		System.out.println("Incident Status: " + incident.getStatus() );
-		System.out.println("Incident Date Created: " + incident.getCreatedOn() );
-
-		//Option to go back
-		System.out.println("Enter 0 to return to the previous menu");
-	}
-
-	/**
-	 * Function creates dummy incidents, for demonstration purposes.
-	 * @throws Exception
-	 */
-	public static void incidentFactory() throws Exception {
-		IncidentServiceImpl incidentService = new IncidentServiceImpl();
+    @PostConstruct
+    public void init() {
+        System.out.println("Initialising ireporter view bean...");
+        this.serviceHelper = new IncidentServiceImpl();
+        this.incidents = fetchIncidents();
+        this.redflagIncidents = fetchRedflagIncidents();
+        this.interventionIncidents = fetchInterventionIncidents();
+        this.types= Arrays.asList(Type.values());
+        this.incident = new Incident();
+    }
 
 
-		String[] incidentTitles = new String[]{"Theft of Funds", "Bribe", "Bad road", "Low labour"};
-		String[] incidentComments = new String[]{"Money allocated to health workers", "Officer Bribes", "The road to Kireka", "Poor pay to traffic officers"};
-		Type[] incidentTypes = new Type[]{Type.RED_FLAG, Type.RED_FLAG, Type.INTERVENTION, Type.INTERVENTION};
+    public List<Incident> fetchIncidents() {
+        System.out.println("Calling getAllIncidents");
+        return serviceHelper.getAllIncidents();
+    }
 
-		for (int i = 0; i < incidentTitles.length ; i++) {
-			Incident incident = new Incident();
-			incident.setTitle(incidentTitles[i]);
-			incident.setComment(incidentComments[i]);
-			incident.setType(incidentTypes[i]);
-			incidentService.saveIncident(incident);
-		}
-	}
-	
-	public static void main(String[] args) throws Exception {
-		//Setting up dummy incidents
-		//incidentFactory();
+    public List<Incident> fetchRedflagIncidents() {
+        System.out.println("Calling getRedflagIncidents");
+        return serviceHelper.getRedflagIncidents();
+    }
 
-		IncidentServiceImpl serviceHelper =new IncidentServiceImpl();
+    public List<Incident> fetchInterventionIncidents() {
+        System.out.println("Calling getInterventionIncidents");
+        return serviceHelper.getInterventionIncidents();
+    }
 
-		System.out.println("**WELCOME TO IREPORTER SYSTEM**\n" +
-				"DESCRIPTION OF IREPORTER \n" +
-				"Corruption is a huge bane to Africa’s development.\n" +
-				"African countries must develop novel and localised solutions that will curb this menace, hence the birth of iReporter.\n" +
-				"iReporter enables any/every citizen to bring any form of corruption to the notice of appropriate authorities and the general public.\n" +
-				"Users can also report on things that needs government intervention...........\n" +
-				"*****************************************************\n" +
-				"WHAT WOULD YOU LIKE TO DO {SELECT AN OPTION}.\n");
-		boolean i =true;
-		while (i){
-			System.out.println("1. Get Incidents\n" +
-					"2. Create Record\n" +
-					"3. Update Incidents\n" +
-					"4. Delete Incidents\n" +
-					"5. Total number of incidents\n" +
-					"0. Exit\n" +
-					"Enter your option:\n" +
-					" ");
-			Scanner sc = new Scanner(System.in);
-			int option;
-			option =sc.nextInt();
-			switch (option){
+    public void save(Incident incident) {
+        System.out.println("Calling saveIncident");
+        try {
+            serviceHelper.saveIncident(incident);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.incident = new Incident();
+        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "allIncidents.xhtml");
+    }
 
-//				Getting all incidents
-				case 1:
-					boolean x = true;
-					while(x) {
-						System.out.println(
-								"Select an option:\n" +
-										"1. Get Red Flag Incidents\n" +
-										"2. Get Intervention Incidents\n" +
-										"3. View All Incidents\n" +
-										"0. Exit\n"
-						);
-						Scanner scanner = new Scanner(System.in);
-						int incidentOption;
-						incidentOption = scanner.nextInt();
-						switch (incidentOption) {
+    public void gettingUpdate(){
+        editIncident = serviceHelper.getAllIncidents().get(this.code-1);
+        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "updater.xhtml");
+    }
 
-							//Getting RedFlag Incidents
-							case 1: System.out.println("Red Flag Incidents : \n");
-									while (true) {
-										printIncidents(serviceHelper.getRedflagIncidents(), "Red_Flag Incidents");
+    public void update(Incident incident) {
+        System.out.println("Calling updateIncident");
+        try {
+            serviceHelper.updateIncident(incident);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.code = 0;
+        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "updateIncident.xhtml");
+    }
 
-										//Option to capture Input
-										option = scanner.nextInt();
-										if(option > serviceHelper.getRedflagIncidents().size() || option == 0 ) {
-											break;
-										}
-										else
-											//Print the selected Option
-											//Option -1 : To refer to the actual index
-											printIncident(serviceHelper.getRedflagIncidents().get(option - 1));
-									}
-							break;
-							case 2: System.out.println("Intervention Incidents : \n");
-								while (true) {
-									printIncidents(serviceHelper.getInterventionIncidents(), "Intervention Incidents");
+    public void delete() {
+        System.out.println("Calling deleteIncident");
+        serviceHelper.deleteIncident(serviceHelper.getAllIncidents().get(this.code-1));
+        this.code = 0;
+        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "allIncidents.xhtml");
+    }
 
-									option = scanner.nextInt();
-									if (option > serviceHelper.getInterventionIncidents().size() || option == 0 ) {
-										break;
-									} else
-										printIncident(serviceHelper.getInterventionIncidents().get(option - 1 ));
-								}
-							break;
-							case 3: System.out.println("All Incidents : \n");
-								while (true) {
-									printIncidents(serviceHelper.getAllIncidents(), "All Incidents");
+    public int incidentNumber() {
+        System.out.println("Calling countIncidents");
+        return serviceHelper.countIncidents();
+    }
 
-									option = scanner.nextInt();
-									if(option > serviceHelper.getAllIncidents().size() || option == 0 ) {
-										break;
-									}
-									else
-										printIncident(serviceHelper.getAllIncidents().get(option - 1));
-								}
-							break;
-							case 0: x = false;
-									System.out.println("Exiting ....");
-							break;
-							default:
-								System.out.println("Invalid option");
-						}
-					}
-					break;
+    public IncidentServiceImpl getServiceHelper() {
+        return serviceHelper;
+    }
 
-//				Saving incidents.
-				case 2:
-					Incident incident1 = new Incident();
-					System.out.println("Please select(Number) the type of your incident \n" +
-							"1 ---> corruption Incident \n" +
-							"2 ---> Intervention Incident" + "\n");
-					int type = sc.nextInt();
+    public void setServiceHelper(IncidentServiceImpl serviceHelper) {
+        this.serviceHelper = serviceHelper;
+    }
 
-					sc.nextLine();
+    public List<Incident> getIncidents() {
+        return incidents;
+    }
 
-					System.out.println("Please enter the title of your incident \n");
-					String title = sc.nextLine();
-					System.out.println("Enter your comment \n");
-					String comment = sc.nextLine();
+    public void setIncidents(List<Incident> incidents) {
+        this.incidents = incidents;
+    }
 
-					if (type == 1){
-						incident1.setType(Type.RED_FLAG);
-					}
-					if (type == 2){
+    public List<Incident> getRedflagIncidents() {
+        return redflagIncidents;
+    }
 
-						incident1.setType(Type.INTERVENTION);
-					}
-					incident1.setTitle(title);
-					incident1.setComment(comment);
+    public void setRedflagIncidents(List<Incident> redflagIncidents) {
+        this.redflagIncidents = redflagIncidents;
+    }
 
-					serviceHelper.saveIncident(incident1);
-					System.out.println("Your report has been saved" + "\n");
+    public List<Incident> getInterventionIncidents() {
+        return interventionIncidents;
+    }
 
-					break;
+    public void setInterventionIncidents(List<Incident> interventionIncidents) {
+        this.interventionIncidents = interventionIncidents;
+    }
 
-//				Updating an incident
-				case 3:
-					System.out.println("===== Please Choose the number of the incident to edit =====");
-					printIncidents(serviceHelper.getAllIncidents());
-					int chosen = sc.nextInt();
-					System.out.println(serviceHelper.updateIncident(serviceHelper.getAllIncidents().get(chosen-1)));
+    public List<Type> getTypes() {
+        return types;
+    }
 
-					break;
-				case 4:
-					while (true) {
-						printIncidents(serviceHelper.getAllIncidents(), "All Incidents");
-						System.out.println("Please type the number of the incident you would like to delete");
-						System.out.println("To exit, type 0");
-						Scanner y = new Scanner(System.in);
-						option = y.nextInt();
+    public void setTypes(List<Type> types) {
+        this.types = types;
+    }
 
-						if(option == 0){
-							break;
-						}
-						if(option > serviceHelper.getAllIncidents().size() || option == 0 ) {
-							break;
-						}
-						else
-							System.out.println("The incident you have deleted is:" + serviceHelper.getAllIncidents().get(option - 1) );
-							serviceHelper.deleteIncident(serviceHelper.getAllIncidents().get(option - 1));
-					}
+    public Incident getIncident() {
+        return incident;
+    }
 
-						break;
-				case 5:
-					System.out.println("Total  number of incidents "+ serviceHelper.countIncidents());
-					break;
-				case 0:
-					i=false;
-					System.out.println("Exiting ...");
-					break;
-				default:
-					System.out.println("wrong input");
-			}
-		}
+    public void setIncident(Incident incident) {
+        this.incident = incident;
+    }
 
+    public int getCode() {
+        return code;
+    }
 
+    public void setCode(int code) {
+        this.code = code;
+    }
 
-	}
+    public Incident getEditIncident() {
+        return editIncident;
+    }
+
+    public void setEditIncident(Incident editIncident) {
+        this.editIncident = editIncident;
+    }
 }
