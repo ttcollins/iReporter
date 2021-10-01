@@ -6,34 +6,43 @@
   <h:head>
     <script name="jquery/jquery.js" library="primefaces"></script>
     <title>Create Incident</title>
+    <style type="text/css">
+            p {
+                line-height: 1.5;
+                margin: 0;
+            }
+        </style>
   </h:head>
   <!--<div style="margin-left:auto; margin-right:auto;">-->
   <body>
-    <div class="card">
-      <p:link outcome="ireporter.xhtml" value="Back"/>
+    <p:growl id="growl" showSummary="true" showDetail="true" keepAlive="true" life="3000">
+      <p:autoUpdate/>
+    </p:growl>
+    <p:card style="margin:auto; width:85%;">
+      <p:linkButton outcome="ireporter.xhtml" value="Back" icon="pi pi-home" style="margin-right:20px;"/>
       <h1>Create an Incident</h1>
       <h:form>
         <div class="ui-fluid p-formgrid p-grid">
           <div class="p-field p-col-12 p-md-6">
-            <label for="title">Title</label>
+            <p:outputLabel for="title">Title:</p:outputLabel>
             <p:inputText id="title" type="text" value="#{ireporterView.incident.title}" />
           </div>
 
-          <div class="p-field p-col-12">
-            <h:outputLabel for="comment">Comment</h:outputLabel>
-<!--            <p:inputText id="comment" type="text" rows="4" value="#{ireporterView.incident.comment}" />-->
-            <h:inputTextarea id="comment" row = "30" col = "10" value = "#{ireporterView.incident.comment}"/>
+          <div class="p-field p-col-12 p-md-6">
+            <p:outputLabel for="comment">Comment:</p:outputLabel>
+            <p:inputTextarea id="comment" row = "30" col = "10" value = "#{ireporterView.incident.comment}" rows="6" cols="33"/>
           </div>
 
-          <h:selectOneMenu value="#{ireporterView.incident.type}">
+          <p:outputLabel for="@next">Type:</p:outputLabel>
+          <p:selectOneMenu value="#{ireporterView.incident.type}">
             <f:selectItem itemLabel="Select type" itemValue="null"/>
             <f:selectItems var="type" itemLabel="#{type.label}"  value="#{ireporterView.types}"/>
-          </h:selectOneMenu>
-          <p:commandButton value="Save" action="#{ireporterView.save(ireporterView.incident)}"></p:commandButton>
+          </p:selectOneMenu>
+          <p:commandButton value="Save" action="#{ireporterView.save(ireporterView.incident)}" style="margin:auto; width:20%"></p:commandButton>
 
         </div>
       </h:form>
 
-    </div>
+    </p:card>
   </body>
 </html>

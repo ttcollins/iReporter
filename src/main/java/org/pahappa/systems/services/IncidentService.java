@@ -76,7 +76,7 @@ public interface IncidentService {
 	 * @param id
 	 * @return updated {@link Incident}
 	 */
-	List<Incident> getIncidentOfId(int id);
+	Incident getIncidentOfId(int id);
 
 	/**
 	 * Deletes an {@link Incident}

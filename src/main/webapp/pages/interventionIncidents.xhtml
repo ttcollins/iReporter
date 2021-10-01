@@ -6,11 +6,17 @@
 <h:head>
   <script name="jquery/jquery.js" library="primefaces"></script>
   <title>iReporter Intervention Incidents</title>
+  <style type="text/css">
+            p {
+                line-height: 1.5;
+                margin: 0;
+            }
+  </style>
 </h:head>
 <!--<div style="margin-left:auto; margin-right:auto;">-->
 <body>
-<div class="card">
-  <p:link outcome="ireporter.xhtml" value="Back"/>
+<p:card style="margin:auto; width:85%;">
+  <p:linkButton outcome="ireporter.xhtml" value="Back" icon="pi pi-home" style="margin-right:20px;"/>
   <h1>Intervention Incidents</h1>
   <h:form>
     <div class="card">
@@ -42,6 +48,6 @@
     </div>
   </h:form>
 
-</div>
+</p:card>
 </body>
 </html>

@@ -1,5 +1,7 @@
 package org.pahappa.systems.views;
 
+import org.pahappa.systems.enums.Status;
+import org.pahappa.systems.exceptions.ValidationFailedException;
 import org.pahappa.systems.models.Incident;
 import org.pahappa.systems.enums.Type;
 import org.pahappa.systems.services.IncidentServiceImpl;
@@ -9,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 
@@ -52,19 +55,39 @@ public class IReporter {
         return serviceHelper.getInterventionIncidents();
     }
 
-    public void save(Incident incident) {
+    public void save(Incident incident) throws Exception {
         System.out.println("Calling saveIncident");
+        if (incident.getTitle()==null){
+            throw new ValidationFailedException("Please enter title");
+        }
+        if (incident.getTitle().isEmpty()){
+            throw new ValidationFailedException("Please enter the title");
+        }
+        if (incident.getComment()==null){
+            throw new ValidationFailedException("Please enter comment");
+        }
+        if (incident.getComment().isEmpty()){
+            throw new ValidationFailedException("please enter comment.");
+        }
+        if (incident.getType()==null){
+            throw new ValidationFailedException("Please choose a type.");
+        }
         try {
+            int incidentIds = incidentNumber();
+            incident.setId(++incidentIds);
+            incident.setStatus(Status.DRAFT);
+            incident.setCreatedOn( new Date());
             serviceHelper.saveIncident(incident);
         } catch (Exception e) {
             e.printStackTrace();
         }
         this.incident = new Incident();
+        this.incidents = fetchIncidents();
         FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "allIncidents.xhtml");
     }
 
     public void gettingUpdate(){
-        editIncident = serviceHelper.getAllIncidents().get(this.code-1);
+        editIncident = serviceHelper.getIncidentOfId(this.code);
         FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "updater.xhtml");
     }
 
@@ -81,8 +104,9 @@ public class IReporter {
 
     public void delete() {
         System.out.println("Calling deleteIncident");
-        serviceHelper.deleteIncident(serviceHelper.getAllIncidents().get(this.code-1));
+        serviceHelper.deleteIncident(serviceHelper.getIncidentOfId(this.code));
         this.code = 0;
+        this.incidents = fetchIncidents();
         FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "allIncidents.xhtml");
     }
 

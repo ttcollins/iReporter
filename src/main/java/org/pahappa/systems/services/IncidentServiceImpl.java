@@ -25,29 +25,10 @@ public class IncidentServiceImpl implements IncidentService {
 
 	@Override
 	public void saveIncident(Incident incident) throws Exception {
-
-		if (incident.getTitle()==null){
-			throw new ValidationFailedException("Please enter title");
-		}
-		if (incident.getTitle().isEmpty()){
-			throw new ValidationFailedException("Please enter the title");
-		}
-		if (incident.getComment()==null){
-			throw new ValidationFailedException("Please enter comment");
-		}
-		if (incident.getComment().isEmpty()){
-			throw new ValidationFailedException("please enter comment.");
-		}
 		try {
-
-			incident.setId(++incidentIds);
-			incident.setStatus(Status.DRAFT);
-			incident.setCreatedOn( new Date());
-
 			transObj = sessionObj.beginTransaction();
 			sessionObj.save(incident);
 			System.out.println("Record saved...");
-
 		} catch (HibernateException exceptionObj) {
 			exceptionObj.printStackTrace();
 		} finally {
@@ -150,8 +131,9 @@ public class IncidentServiceImpl implements IncidentService {
 	}
 
 	@Override
-	public List<Incident> getIncidentOfId(int id) {
+	public Incident getIncidentOfId(int id) {
 		List<Incident> incidents = new ArrayList<>();
+
 		try {
 			transObj = sessionObj.beginTransaction();
 
@@ -159,19 +141,16 @@ public class IncidentServiceImpl implements IncidentService {
 
 			incidents = queryObj.list();
 
+			for(Incident item:incidents){
+				return item;
+			}
+
 		} catch (HibernateException exceptionObj) {
 			exceptionObj.printStackTrace();
 		} finally {
 			transObj.commit();
 		}
-
-		if(incidents == null){
-			return null;
-		}else if(incidents.isEmpty()){
-			return null;
-		}else{
-			return incidents;
-		}
+		return null;
 	}
 
 	@Override

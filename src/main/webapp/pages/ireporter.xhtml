@@ -6,17 +6,24 @@
     <h:head>
         <script name="jquery/jquery.js" library="primefaces"></script>
         <title>iReporter</title>
+        <style type="text/css">
+            p {
+                line-height: 1.5;
+                margin: 0;
+            }
+        </style>
     </h:head>
+
 <!--<div style="margin-left:auto; margin-right:auto;">-->
     <body>
-        <div class="card">
+        <p:card style="margin:auto; width:50%;">
             <h1>WELCOME TO IREPORTER SYSTEM</h1>
-            <h3>DESCRIPTION: Corruption is a huge bane to Africa’s development. African countries must develop</h3>
-            <h3>novel and localised solutions that will curb this menace, hence the birth of iReporter. iReporter</h3>
-            <h3>enables any/every citizen to bring any form of corruption to the notice of appropriate authorities</h3>
-            <h3>and the general public. Users can also report on things that needs government intervention</h3>
-            <h2><b>WHAT WOULD YOU LIKE TO DO?</b></h2>
-            <div class="card">
+            <h3>DESCRIPTION:</h3> <h4>Corruption is a huge bane to Africa’s development. African countries must develop
+            novel and localised solutions that will curb this menace, hence the birth of iReporter. iReporter
+            enables any/every citizen to bring any form of corruption to the notice of appropriate authorities
+            and the general public. Users can also report on things that needs government intervention</h4>
+            <h3><b>WHAT WOULD YOU LIKE TO DO?</b></h3>
+            <div style="margin:auto; width:50%;">
                 <p:link outcome="allIncidents.xhtml" value="View all Incidents">
                     <f:param name="allIncidents" value="1"/>
                 </p:link><br/>
@@ -39,7 +46,7 @@
                     <f:param name="countIncidents" value="1"/>
                 </p:link><br/>
             </div>
-        </div>
+        </p:card>
     </body>
 
 </html>

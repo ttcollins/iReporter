@@ -6,13 +6,19 @@
 <h:head>
   <script name="jquery/jquery.js" library="primefaces"></script>
   <title>Total Incidents</title>
+  <style type="text/css">
+            p {
+                line-height: 1.5;
+                margin: 0;
+            }
+        </style>
 </h:head>
 <!--<div style="margin-left:auto; margin-right:auto;">-->
 <body>
-<div class="card">
-  <p:link outcome="ireporter.xhtml" value="Back"/>
-  <h1>Total Number of Incidents</h1>
-  <h3><b>#{ireporterView.incidentNumber()}</b></h3>
-</div>
+  <p:card style="margin:auto; width:50%;">
+    <p:linkButton outcome="ireporter.xhtml" value="Back" icon="pi pi-home" style="margin-right:20px;"/>
+    <h1>Total Number of Incidents</h1>
+    <h3><b>#{ireporterView.incidentNumber()}</b></h3>
+  </p:card>
 </body>
 </html>
