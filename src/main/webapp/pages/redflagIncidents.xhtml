@@ -6,11 +6,17 @@
 <h:head>
     <script name="jquery/jquery.js" library="primefaces"></script>
     <title>iReporter Redflag Incidents</title>
+    <style type="text/css">
+            p {
+                line-height: 1.5;
+                margin: 0;
+            }
+        </style>
 </h:head>
 <!--<div style="margin-left:auto; margin-right:auto;">-->
 <body>
-<div class="card">
-    <p:linkButton outcome="ireporter.xhtml" value="Back" icon="pi pi-home" style="margin-right:20px;"/>
+<p:card style="margin:auto; width:85%;">
+    <p:linkButton outcome="ireporter.xhtml" value="HOME" icon="pi pi-home" style="margin-right:20px;"/>
     <h1>Redflag Incidents</h1>
     <h:form>
         <div class="card">
@@ -38,10 +44,24 @@
                 <p:column headerText="Created On">
                     <h:outputText value="#{redflagIncident.createdOn}" />
                 </p:column>
+
+                <p:column>
+                    <p:commandButton id = "edit" action = "updater"  icon="pi pi-pencil" styleClass="rounded-button ui-button-success ui-button-flat">
+                        <f:setPropertyActionListener
+                                target = "#{ireporterView.incident}" value = "#{redflagIncident}" />
+                    </p:commandButton>
+
+                    <p:commandButton id = "delete" action = "#{ireporterView.delete()}" icon="pi pi-trash" styleClass="rounded-button ui-button-danger ui-button-flat">
+                        <f:setPropertyActionListener
+                                target = "#{ireporterView.incident}" value = "#{redflagIncident}" />
+                    </p:commandButton>
+
+                </p:column>
+
             </p:dataTable>
         </div>
     </h:form>
 
-</div>
+</p:card>
 </body>
 </html>

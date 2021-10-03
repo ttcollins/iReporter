@@ -13,32 +13,31 @@
             }
         </style>
     </h:head>
-<!--<div style="margin-left:auto; margin-right:auto;">-->
     <body>
         <p:growl id="growl" showSummary="true" showDetail="true" keepAlive="true" life="3000">
             <p:autoUpdate/>
         </p:growl>
         <p:card style="margin:auto; width:85%;">
-            <p:linkButton outcome="ireporter.xhtml" value="Back" icon="pi pi-home" style="margin-right:20px;"/>
+            <p:commandButton action="#{ireporterView.cancel()}" styleClass="ui-button-danger" value="Cancel" icon="pi pi-times" style="margin-right:20px;"/>
             <h1>Update an Incident</h1>
             <h:form>
                 <div class="ui-fluid p-formgrid p-grid">
                     <div class="p-field p-col-12 p-md-6">
                         <label for="title">Title</label>
-                        <p:inputText id="title" type="text" value="#{ireporterView.editIncident.title}" />
+                        <p:inputText id="title" type="text" value="#{ireporterView.incident.title}" />
                     </div>
 
                     <div class="p-field p-col-12">
                         <p:outputLabel for="comment">Comment:</p:outputLabel>
-                        <p:inputTextarea id="comment" row = "30" col = "10" value = "#{ireporterView.editIncident.comment}"/>
+                        <p:inputTextarea id="comment" row = "30" col = "10" value = "#{ireporterView.incident.comment}"/>
                     </div>
 
                     <p:outputLabel for="@next">Type:</p:outputLabel>
-                    <p:selectOneMenu value="#{ireporterView.editIncident.type}">
+                    <p:selectOneMenu value="#{ireporterView.incident.type}">
                         <f:selectItem itemLabel="Select type" itemValue="null"/>
                         <f:selectItems var="type" itemLabel="#{type.label}"  value="#{ireporterView.types}"/>
                     </p:selectOneMenu>
-                    <p:commandButton value="Update" action="#{ireporterView.update(ireporterView.editIncident)}"></p:commandButton>
+                    <p:commandButton value="Update" styleClass="ui-button-success" action="#{ireporterView.update(ireporterView.incident)}"></p:commandButton>
 
                 </div>
             </h:form>

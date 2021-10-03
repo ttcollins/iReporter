@@ -22,6 +22,7 @@
             novel and localised solutions that will curb this menace, hence the birth of iReporter. iReporter
             enables any/every citizen to bring any form of corruption to the notice of appropriate authorities
             and the general public. Users can also report on things that needs government intervention</h4>
+            <h3><b>AVAILABLE INCIDENTS: #{ireporterView.incidentNumber()}</b></h3>
             <h3><b>WHAT WOULD YOU LIKE TO DO?</b></h3>
             <div style="margin:auto; width:50%;">
                 <p:link outcome="allIncidents.xhtml" value="View all Incidents">
@@ -35,15 +36,6 @@
                 </p:link><br/>
                 <p:link outcome="saveIncident.xhtml" value="Create an Incident">
                     <f:param name="saveIncident" value="1"/>
-                </p:link><br/>
-                <p:link outcome="updateIncident.xhtml" value="Update an Incident">
-                    <f:param name="updateIncident" value="1"/>
-                </p:link><br/>
-                <p:link outcome="deleteIncident.xhtml" value="Delete an Incident">
-                    <f:param name="deleteIncident" value="1"/>
-                </p:link><br/>
-                <p:link outcome="countIncidents.xhtml" value="Get the total number of Incidents">
-                    <f:param name="countIncidents" value="1"/>
                 </p:link><br/>
             </div>
         </p:card>

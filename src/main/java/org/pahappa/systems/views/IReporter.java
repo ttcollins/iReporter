@@ -9,7 +9,10 @@ import org.pahappa.systems.services.IncidentServiceImpl;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +25,6 @@ public class IReporter {
     private IncidentServiceImpl serviceHelper =new IncidentServiceImpl();
     private Incident incident = new Incident();
     private int code;
-    private Incident editIncident = new Incident();
     private List<Incident> redflagIncidents;
     private List<Incident> interventionIncidents;
     private List<Incident> incidents;
@@ -86,9 +88,9 @@ public class IReporter {
         FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "allIncidents.xhtml");
     }
 
-    public void gettingUpdate(){
-        editIncident = serviceHelper.getIncidentOfId(this.code);
-        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "updater.xhtml");
+    public void cancel() {
+        this.incident = new Incident();
+        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "allIncidents.xhtml");
     }
 
     public void update(Incident incident) {
@@ -98,16 +100,21 @@ public class IReporter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        this.code = 0;
-        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "updateIncident.xhtml");
+        this.incident = new Incident();
+        this.redflagIncidents = fetchRedflagIncidents();
+        this.interventionIncidents = fetchInterventionIncidents();
+        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "allIncidents.xhtml");
     }
 
-    public void delete() {
+    public void delete() throws IOException {
         System.out.println("Calling deleteIncident");
-        serviceHelper.deleteIncident(serviceHelper.getIncidentOfId(this.code));
-        this.code = 0;
+        serviceHelper.deleteIncident(incident);
+        this.incident = new Incident();
+        this.redflagIncidents = fetchRedflagIncidents();
+        this.interventionIncidents = fetchInterventionIncidents();
         this.incidents = fetchIncidents();
-        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "allIncidents.xhtml");
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
     }
 
     public int incidentNumber() {
@@ -171,11 +178,4 @@ public class IReporter {
         this.code = code;
     }
 
-    public Incident getEditIncident() {
-        return editIncident;
-    }
-
-    public void setEditIncident(Incident editIncident) {
-        this.editIncident = editIncident;
-    }
 }

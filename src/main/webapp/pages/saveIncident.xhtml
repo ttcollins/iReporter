@@ -38,7 +38,7 @@
             <f:selectItem itemLabel="Select type" itemValue="null"/>
             <f:selectItems var="type" itemLabel="#{type.label}"  value="#{ireporterView.types}"/>
           </p:selectOneMenu>
-          <p:commandButton value="Save" action="#{ireporterView.save(ireporterView.incident)}" style="margin:auto; width:20%"></p:commandButton>
+          <p:commandButton value="Save" action="#{ireporterView.save(ireporterView.incident)}" styleClass="ui-button-success" style="margin:auto; width:20%"></p:commandButton>
 
         </div>
       </h:form>

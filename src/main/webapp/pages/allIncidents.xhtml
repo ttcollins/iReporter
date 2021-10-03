@@ -16,7 +16,7 @@
 <!--<div style="margin-left:auto; margin-right:auto;">-->
   <body>
     <p:card style="margin:auto; width:85%;">
-      <p:linkButton outcome="ireporter.xhtml" value="Back" icon="pi pi-home" style="margin-right:20px;"/>
+      <p:linkButton outcome="ireporter.xhtml" value="HOME" icon="pi pi-home" style="margin-right:20px;"/>
       <h1>All Incidents</h1>
       <h:form>
         <div class="card">
@@ -43,6 +43,19 @@
 
             <p:column headerText="Created On">
               <h:outputText value="#{incident.createdOn}" />
+            </p:column>
+
+            <p:column>
+              <p:commandButton id = "edit" action = "updater"  icon="pi pi-pencil" styleClass="rounded-button ui-button-success ui-button-flat">
+                <f:setPropertyActionListener
+                        target = "#{ireporterView.incident}" value = "#{incident}" />
+              </p:commandButton>
+
+              <p:commandButton id = "delete" action = "#{ireporterView.delete()}" icon="pi pi-trash" styleClass="rounded-button ui-button-danger ui-button-flat">
+                <f:setPropertyActionListener
+                        target = "#{ireporterView.incident}" value = "#{incident}" />
+              </p:commandButton>
+
             </p:column>
           </p:dataTable>
         </div>
