@@ -4,10 +4,12 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.pahappa.systems.Dao.IncidentDao;
 import org.pahappa.systems.HibernateUtil;
 import org.pahappa.systems.enums.Status;
 import org.pahappa.systems.exceptions.ValidationFailedException;
 import org.pahappa.systems.models.Incident;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,9 @@ import java.util.List;
 @Service
 @Transactional
 public class IncidentServiceImpl implements IncidentService {
+	@Autowired
+	IncidentDao incidentDao;
+
 	private static Transaction transObj;
 	private static Session sessionObj = HibernateUtil.getSessionFactory().openSession();
 
@@ -25,15 +30,17 @@ public class IncidentServiceImpl implements IncidentService {
 
 	@Override
 	public void saveIncident(Incident incident) throws Exception {
-		try {
-			transObj = sessionObj.beginTransaction();
-			sessionObj.save(incident);
-			System.out.println("Record saved...");
-		} catch (HibernateException exceptionObj) {
-			exceptionObj.printStackTrace();
-		} finally {
-			transObj.commit();
-		}
+//		try {
+//			transObj = sessionObj.beginTransaction();
+//			sessionObj.save(incident);
+//			System.out.println("Record saved...");
+//		} catch (HibernateException exceptionObj) {
+//			exceptionObj.printStackTrace();
+//		} finally {
+//			transObj.commit();
+//		}
+		incidentDao.save(incident);
+		System.out.println("Record saved...");
 	}
 
 	@Override
